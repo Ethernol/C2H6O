@@ -4,17 +4,22 @@
 	import welcome_fallback from '$lib/images/svelte-welcome.png';
 
 	import { onMount } from "svelte";
+	import { smartContractABI } from "$lib/constants/abi.js";
 
-	let meta_mask_button_string = "";
+	import Web3 from 'web3';
+	
 
-	// let smartContractRepresentation = await new ethers.Contract(
-	// 										"0x0575f95B2C83b43cC9B497B2274C5673D735C434",
-	// 										smartContractABI,
-	// 										provider
-	// 									);
+	let smartContractAddress = "0x472eCED37080fbCcb2332562f69B13e6d1c658cA";
+
+	let metaMaskButtonString = "";
+	let connected = false;
+
+	let account;
+	let smartContractInstance;
+	let web3;
 
 	onMount(async () => {
-		meta_mask_button_string = checkMetaMask();
+		metaMaskButtonString = checkMetaMask();
 
 		function checkMetaMask() {
 			if (typeof window.ethereum == 'undefined') {			
@@ -27,8 +32,30 @@
     });
 
 	async function onMetaMaskButton(){
-		const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-		const account = accounts[0];
+		const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+		account = accounts[0];
+		connected = true;
+		setSmartContractInstance();
+	}
+
+	async function setSmartContractInstance() {
+		// https://sepolia.etherscan.io/tx/0x3837ce40b7a08b82c44cf4d184bb90813a7c23a40928e883f2d9d0f8c3e71e11
+		web3 = new Web3(window.ethereum);		
+		smartContractInstance = new web3.eth.Contract(smartContractABI, smartContractAddress);
+	}
+	function donate10() {
+		donate(50000000000000000);
+	}
+
+	function donate(donation) {
+		if (smartContractInstance !== null) {
+			let a = smartContractInstance.methods.sendDonation(account)
+													.send({from: account,
+														   value: donation,
+														   });
+		}
+		// web3.utils.toWei(donation, 'ether')
+		console.log("Donated");
 	}
 
 </script>
@@ -41,9 +68,16 @@
 <section>
 	<h1>
 		<span class="welcome">
+			{#if !connected}
 			<button on:click={onMetaMaskButton}>
-				{meta_mask_button_string}
+				{metaMaskButtonString}
 			</button>
+			{/if}
+			{#if connected}
+			<button on:click={donate10}>
+				Doante 10 WEI to me!
+			</button>
+			{/if}
 		</span>
 	</h1>
 
