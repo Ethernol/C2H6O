@@ -44,12 +44,12 @@
 		smartContractInstance = new web3.eth.Contract(smartContractABI, smartContractAddress);
 	}
 	function donate10() {
-		donate(50000000000000000);
+		donate(5000000000000000);
 	}
 
 	function donate(donation) {
 		if (smartContractInstance !== null) {
-			let a = smartContractInstance.methods.sendDonation(account)
+			let a = smartContractInstance.methods.sendDonation("0xadC756EfB05506E373C1b650050daC0d5b57aE7C")
 													.send({from: account,
 														   value: donation,
 														   });
