@@ -66,23 +66,20 @@
 </svelte:head>
 
 <section>
-	<h1>
 		<span class="welcome">
-			{#if !connected}
-			<button on:click={onMetaMaskButton}>
-				{metaMaskButtonString}
-			</button>
-			{/if}
-			{#if connected}
-			<button on:click={donate10}>
-				Doante 10 WEI to me!
-			</button>
-			{/if}
+			<div class="center">
+				{#if !connected}
+				<button class="button-22" on:click={onMetaMaskButton}>
+					{metaMaskButtonString}
+				</button>
+				{/if}
+				{#if connected}
+				<button class="button-22" on:click={donate10}>
+					Doante 10 WEI to me!
+				</button>
+				{/if}
+			</div>
 		</span>
-	</h1>
-
-	<h2>
-	</h2>
 </section>
 
 <style>
@@ -114,4 +111,13 @@
 		top: 0;
 		display: block;
 	}
+
+	.center {
+		margin: 0;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		-ms-transform: translate(-50%, -50%);
+		transform: translate(-50%, -50%);
+}
 </style>
