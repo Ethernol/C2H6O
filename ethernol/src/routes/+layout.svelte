@@ -8,6 +8,7 @@
   <header />
 
   <main>
+    <Header />
     <slot />
   </main>
 

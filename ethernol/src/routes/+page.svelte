@@ -1,8 +1,4 @@
 <script>
-	import Header from './Header.svelte';
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
-
 	import { onMount } from "svelte";
 	import { smartContractABI } from "$lib/constants/abi.js";
 
@@ -38,28 +34,7 @@
 		setSmartContractInstance();
 	}
 
-	async function setSmartContractInstance() {
-		// https://sepolia.etherscan.io/tx/0x3837ce40b7a08b82c44cf4d184bb90813a7c23a40928e883f2d9d0f8c3e71e11
-		web3 = new Web3(window.ethereum);		
-		smartContractInstance = new web3.eth.Contract(smartContractABI, smartContractAddress);
-	}
-	function donate10() {
-		donate(5000000000000000);
-	}
-
-	function donate(donation) {
-		if (smartContractInstance !== null) {
-			let a = smartContractInstance.methods.sendDonation("0xadC756EfB05506E373C1b650050daC0d5b57aE7C")
-													.send({from: account,
-														   value: donation,
-														   });
-		}
-		// web3.utils.toWei(donation, 'ether')
-		console.log("Donated");
-	}
-
 </script>
-<Header />
 <svelte:head>
 	<title>Home</title>
 	<meta name="description" content="Svelte demo app" />
@@ -74,9 +49,7 @@
 				</button>
 				{/if}
 				{#if connected}
-				<button class="button-22" on:click={donate10}>
-					Doante 10 WEI to me!
-				</button>
+					<h3> You are connected</h3>
 				{/if}
 			</div>
 		</span>

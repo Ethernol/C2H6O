@@ -76,7 +76,6 @@ pre {
 	margin: 0 auto;
 }
 
-input,
 button {
 	font-size: inherit;
 	font-family: inherit;
@@ -102,6 +101,14 @@ button:focus:not(:focus-visible) {
 	position: absolute;
 	width: 1px;
 	white-space: nowrap;
+}
+
+section {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	flex: 0.6;
 }
 
 .button-22 {
