@@ -36,6 +36,7 @@
 	let metaMaskButtonString = "";
 	let connected = false;
 	let loaded = false;
+	let ready = false;
 
 	let account;
 	let smartContractInstance;
@@ -51,7 +52,7 @@
 				console.log('MetaMask is not installed!');
 				return 'MetaMask is not installed.\nClick here to install!';
 			}
-			return 'Click here to login via MetaMask.';
+			return 'Click to login with MetaMask';
 		}		
     });
 
@@ -126,6 +127,8 @@
 			}
 			
 			console.log(int2hex(initialImage[cellY][cellX]));	
+			console.log(Object.keys(changedPixels).length);
+			ready = Object.keys(changedPixels).length > 0;	
 		}
 
 		function handleToggleGuideChange() {
@@ -221,9 +224,11 @@
 	<span class="welcome">
 		<div class="center">
 			{#if !connected}
-			<button class="button-22" on:click={onMetaMaskButton}>
-				{metaMaskButtonString}
-			</button>
+				<div class="center">
+					<button class="button-22" on:click={onMetaMaskButton}>
+						{metaMaskButtonString}
+					</button>
+				</div>
 			{/if}
 
 			<div>
@@ -246,16 +251,20 @@
 			</div>
 
 			{#if connected && !loaded}	
-				<input type="text" bind:value={address} placeholder={address}>
-				<button class="button-22" on:click={getFanImage}>
-					Open Fan Image.
-				</button>
+				<div class="center">
+					<input type="text" bind:value={address} placeholder={address}>
+					<button class="button-22" on:click={getFanImage}>
+						Open Fan Image.
+					</button>
+				</div>
 			{/if}
 
-			{#if loaded}	
-				<button class="button-22" on:click={paintPixels}>
-					Paint pixels (for {Object.keys(changedPixels).length * pricePerPixel} WEI.).
-				</button>
+			{#if loaded && ready}
+				<div class="center">
+					<button class="button-22" on:click={paintPixels}>
+						Paint pixels (for {Object.keys(changedPixels).length * pricePerPixel} WEI.).
+					</button>
+				</div>
 			{/if}
 		</div>
 	</span>
