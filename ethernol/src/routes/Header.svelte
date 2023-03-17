@@ -19,11 +19,11 @@
 			<li aria-current={$page.url.pathname === '/' ? 'page' : undefined}>
 				<a href="/">Home</a>
 			</li>
-			<li aria-current={$page.url.pathname === '/send' ? 'page' : undefined}>
-				<a href="/send">Send</a>
+			<li aria-current={$page.url.pathname === '/contribute' ? 'page' : undefined}>
+				<a href="/contribute">Contribute</a>
 			</li>
-			<li aria-current={$page.url.pathname.startsWith('/recieve') ? 'page' : undefined}>
-				<a href="/receive">Receive</a>
+			<li aria-current={$page.url.pathname.startsWith('/create') ? 'page' : undefined}>
+				<a href="/create">Create</a>
 			</li>
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
