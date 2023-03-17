@@ -1,18 +1,10 @@
 <script>
-	import { onMount } from "svelte";
-	import { smartContractABI } from "$lib/constants/abi.js";
-
-	import Web3 from 'web3';
-	
-
-	let smartContractAddress = "0x472eCED37080fbCcb2332562f69B13e6d1c658cA";
+	import { onMount } from "svelte";	
 
 	let metaMaskButtonString = "";
 	let connected = false;
 
 	let account;
-	let smartContractInstance;
-	let web3;
 
 	onMount(async () => {
 		metaMaskButtonString = checkMetaMask();
@@ -22,7 +14,7 @@
 				console.log('MetaMask is not installed!');
 				return 'MetaMask is not installed.\nClick here to install!';
 			}
-			return 'Click here to login via MetaMask.';
+			return 'Click to login with MetaMask';
 		}
 		
     });
@@ -37,16 +29,19 @@
 </script>
 <svelte:head>
 	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
+	<meta name="description" content="Home" />
 </svelte:head>
 
 <section>
+		<h1>Home</h1>
 		<span class="welcome">
 			<div class="center">
 				{#if !connected}
-				<button class="button-22" on:click={onMetaMaskButton}>
-					{metaMaskButtonString}
-				</button>
+				<div class="center">
+					<button class="button-22" on:click={onMetaMaskButton}>
+						{metaMaskButtonString}
+					</button>
+				</div>
 				{/if}
 				{#if connected}
 					<h3> You are connected</h3>
@@ -54,36 +49,3 @@
 			</div>
 		</span>
 </section>
-
-<style>
-	section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
-
-	h1 {
-		width: 100%;
-	}
-
-	.welcome {
-		display: block;
-		position: relative;
-		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 495 / 2048) 0;
-		color: var(--color-theme-1);
-	}
-
-	.center {
-		margin: 0;
-		width: 50%;
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		-ms-transform: translate(-50%, -50%);
-		transform: translate(-50%, -50%);
-}
-</style>

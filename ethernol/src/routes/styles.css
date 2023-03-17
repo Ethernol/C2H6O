@@ -49,6 +49,7 @@ a:hover {
 
 h1 {
 	font-size: 2rem;
+	margin: 1;
 	text-align: center;
 }
 
@@ -105,6 +106,7 @@ button:focus:not(:focus-visible) {
 
 section {
 	display: flex;
+	text-align: center;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
@@ -112,8 +114,6 @@ section {
 }
 
 .button-22 {
-  top: 50%;
-  bottom: 50%;
   align-items: center;
   appearance: button;
   background-color: #ff3e00;
@@ -135,7 +135,7 @@ section {
   text-transform: none;
   transition: color .13s ease-in-out,background .13s ease-in-out,opacity .13s ease-in-out,box-shadow .13s ease-in-out;
   user-select: none;
-  -webkit-user-select: none;
+  /* -webkit-user-select: none; */
   touch-action: manipulation;
 }
 
@@ -145,4 +145,37 @@ section {
 
 .button-22:hover {
   background-color: #ff5015;
+}
+
+input[type=text] {
+	border: 2px solid orangered;
+	border-radius: 4px;
+	width: 100%;
+	color: var(--color-bg-0);
+	text-decoration: none;
+}
+
+.welcome {
+	display: block;
+	position: relative;
+	width: 100%;
+	height: 0;
+	padding: 0 0 calc(100% * 495 / 2048) 0;
+	color: var(--color-text);
+}
+
+.center {
+	margin: 1;
+	width: 50%;
+	position: absolute;
+	left: 25%;
+	/* -ms-transform: translate(-50%, -50%); */
+	/* transform: translate(-50%, -50%); */
+}
+section {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	flex: 0.6;
 }
