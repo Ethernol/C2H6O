@@ -49,6 +49,7 @@ a:hover {
 
 h1 {
 	font-size: 2rem;
+	margin: 1;
 	text-align: center;
 }
 
@@ -134,7 +135,7 @@ section {
   text-transform: none;
   transition: color .13s ease-in-out,background .13s ease-in-out,opacity .13s ease-in-out,box-shadow .13s ease-in-out;
   user-select: none;
-  -webkit-user-select: none;
+  /* -webkit-user-select: none; */
   touch-action: manipulation;
 }
 
@@ -164,13 +165,12 @@ input[type=text] {
 }
 
 .center {
-	margin: 0;
+	margin: 1;
 	width: 50%;
 	position: absolute;
-	top: 50%;
-	left: 50%;
-	-ms-transform: translate(-50%, -50%);
-	transform: translate(-50%, -50%);
+	left: 25%;
+	/* -ms-transform: translate(-50%, -50%); */
+	/* transform: translate(-50%, -50%); */
 }
 section {
 	display: flex;
