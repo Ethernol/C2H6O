@@ -1,6 +1,6 @@
 <script>
 	import { onMount } from "svelte";
-	import { smartContractABI } from "$lib/constants/abi.js";
+	import { smartContractABI } from "$lib/constants/ethernol_abi.jsol_abi.js";
 
 	import Web3 from 'web3';
 	
