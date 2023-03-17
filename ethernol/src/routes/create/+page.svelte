@@ -19,6 +19,10 @@
 	base_link += "?target="
 	let link = ""
 	let link_created = false
+	let width = 10
+	let heigth = 10
+	let ppp = 100000000
+
 
 	onMount(async () => {
 		metaMaskButtonString = checkMetaMask();
@@ -28,7 +32,7 @@
 				console.log('MetaMask is not installed!');
 				return 'MetaMask is not installed.\nClick here to install!';
 			}
-			return 'Click here to login via MetaMask.';
+			return 'Click to login with MetaMask';
 		}
 		
     });
@@ -58,19 +62,27 @@
 
 <section>
 	<h1> Create your Image </h1>
-	<h2> Create your link </h2>
 		<span class="welcome">
 			<div class="center">
 				{#if !connected}
-				<button class="button-22" on:click={onMetaMaskButton}>
-					{metaMaskButtonString}
-				</button>
+				<div class="center">
+					<button class="button-22" on:click={onMetaMaskButton}>
+						{metaMaskButtonString}
+					</button>
+				</div>
 				{/if}
 				{#if connected}
 					<h3> Your Wallet:</h3>
 					<input type="text" bind:value={account} placeholder={account} readonly>
 					<h3> Enter Shortname:</h3>
-					<input type="text" bind:value={shortname} placeholder={shortname}>
+					<input type="text" bind:value={shortname}>
+					<h3> Image width:</h3>
+					<input type="text" bind:value={width}>
+					<h3> Image heigth:</h3>
+					<input type="text" bind:value={heigth}>
+					<h3> Price per pixel:</h3>
+					<input type="text" bind:value={ppp}>
+					
 					{#if !link_created}
 						<button class="button-22" on:click={createLink}>
 							Create Link

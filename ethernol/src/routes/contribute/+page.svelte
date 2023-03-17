@@ -5,8 +5,8 @@
 	import { fanImageContractABI } from "$lib/constants/fan_image_abi.js";
 
 	import Web3 from 'web3';
-    import { check_outros } from 'svelte/internal';
-
+    import { check_outros, listen_dev } from 'svelte/internal';
+	
 	let canvas;
 	let guide;
 	let colorInput;
@@ -50,7 +50,7 @@
 				console.log('MetaMask is not installed!');
 				return 'MetaMask is not installed.\nClick here to install!';
 			}
-			return 'Click here to login via MetaMask.';
+			return 'Click to login with MetaMask';
 		}		
     });
 
@@ -196,18 +196,20 @@
 
 
 <svelte:head>
-	<title>Send</title>
-	<meta name="description" content="Send" />
+	<title>Contribute</title>
+	<meta name="description" content="Contribute" />
 </svelte:head>
 
 <section>
-	<h1>Send </h1>
+	<h1>Contribute to creator image </h1>
 	<span class="welcome">
 		<div class="center">
 			{#if !connected}
-			<button class="button-22" on:click={onMetaMaskButton}>
-				{metaMaskButtonString}
-			</button>
+			<div class="center">
+				<button class="button-22" on:click={onMetaMaskButton}>
+					{metaMaskButtonString}
+				</button>
+			</div>
 			{:else}
 			<div>
 				<div>

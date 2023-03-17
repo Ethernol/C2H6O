@@ -14,7 +14,7 @@
 				console.log('MetaMask is not installed!');
 				return 'MetaMask is not installed.\nClick here to install!';
 			}
-			return 'Click here to login via MetaMask.';
+			return 'Click to login with MetaMask';
 		}
 		
     });
@@ -37,9 +37,11 @@
 		<span class="welcome">
 			<div class="center">
 				{#if !connected}
-				<button class="button-22" on:click={onMetaMaskButton}>
-					{metaMaskButtonString}
-				</button>
+				<div class="center">
+					<button class="button-22" on:click={onMetaMaskButton}>
+						{metaMaskButtonString}
+					</button>
+				</div>
 				{/if}
 				{#if connected}
 					<h3> You are connected</h3>
