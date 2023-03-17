@@ -19,6 +19,7 @@
 	let cellPixelLength;
 
 	let initialImage;
+	let pricePerPixel;
 
 	const emptyColor = "#ffffff55";
 	const changedPixels = {};
@@ -34,6 +35,7 @@
 
 	let metaMaskButtonString = "";
 	let connected = false;
+	let loaded = false;
 
 	let account;
 	let smartContractInstance;
@@ -67,13 +69,27 @@
 	async function getFanImage() {
 		web3 = new Web3(window.ethereum);		
 		fanImageContractInstance = new web3.eth.Contract(fanImageContractABI, address);
+		fanImageContractInstance.methods.getPricePerPixel()
+							.call({from: account})
+							.then((ppp) => {pricePerPixel = ppp});
 		fanImageContractInstance.methods.getImage()
 							.call({from: account})
 							.then((img) => {
 								initialImage = img;
 								initImage();});
-	}
 
+		loaded = true;
+	}
+	async function paintPixels() {
+		let amount = Object.keys(changedPixels).length
+		let xs = Object.keys(changedPixels).map((key) => key.split(",")[0]);
+		let ys = Object.keys(changedPixels).map((key) => key.split(",")[1]);
+		let colors = Object.keys(changedPixels).map((key) => changedPixels[key]);
+		fanImageContractInstance.methods.paintPixels(amount, xs, ys, colors)
+													.send({from: account,
+														   value: amount * pricePerPixel,
+														   });
+	}
 	function donate(donation) {
 		if (smartContractInstance !== null) {
 			let a = smartContractInstance.methods.sendDonation("0xadC756EfB05506E373C1b650050daC0d5b57aE7C")
@@ -97,19 +113,19 @@
 			const cellY = Math.floor(y / cellPixelLength);
 
 			if(remover.checked) {
-				if(`${cellX}_${cellY}` in changedPixels) {
+				if([cellX, cellY] in changedPixels) {
 					clearCell(cellX, cellY);
-					delete(changedPixels[`${cellX}_${cellY}`]);
+					delete(changedPixels[[cellX, cellY]]);
 				}
 			}else{
 				console.log(initialImage[cellY][cellX]);
 				if(initialImage[cellY][cellX] == 999999999){
 					fillCell(cellX, cellY, colorInput.value);
-					changedPixels[`${cellX}_${cellY}`] = colorInput.value;
+					changedPixels[[cellX, cellY]] = hex2int(colorInput.value);
 				}
 			}
 			
-			console.log(changedPixels);	
+			console.log(int2hex(initialImage[cellY][cellX]));	
 		}
 
 		function handleToggleGuideChange() {
@@ -178,17 +194,19 @@
 			toggleGuide.addEventListener("change", handleToggleGuideChange);
 
 		}
-		
+		function componentToHex(c) {
+			var hex = c.toString(16);
+			return hex.length == 1 ? "0" + hex : hex;
+		}
+
 		function int2hex(i) {
-			let m = Math.floor((i % 1000000) / 1000)
-			return "#" + (1 << 24 | Math.floor(i/1000000) << 16 | m << 8 | Math.floor(m % 1000)).toString(16).slice(1);
+			let m = i % 1000000;
+			return "#" + componentToHex(Math.floor(i/1000000)) + componentToHex(Math.floor(m/1000)) + componentToHex(Math.floor(m % 1000));
 		}
 
 		function hex2int(hex) {
 			var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-			return result ? [parseInt(result[1], 16)* 1000000,
-							parseInt(result[2], 16)* 1000,
-							parseInt(result[3], 16)] : null;
+			return result ? parseInt(result[1], 16) * 1000000+parseInt(result[2], 16) * 1000+parseInt(result[3], 16) : null;
 		}
 </script>
 
@@ -227,10 +245,16 @@
 				</div>
 			</div>
 
-			{#if connected}	
+			{#if connected && !loaded}	
 				<input type="text" bind:value={address} placeholder={address}>
 				<button class="button-22" on:click={getFanImage}>
 					Open Fan Image.
+				</button>
+			{/if}
+
+			{#if loaded}	
+				<button class="button-22" on:click={paintPixels}>
+					Paint pixels (for {Object.keys(changedPixels).length * pricePerPixel} WEI.).
 				</button>
 			{/if}
 		</div>
