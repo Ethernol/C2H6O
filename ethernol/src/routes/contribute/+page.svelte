@@ -34,6 +34,7 @@
 
 	let metaMaskButtonString = "";
 	let connected = false;
+	let opened = false;
 
 	let account;
 	let smartContractInstance;
@@ -65,6 +66,7 @@
 		smartContractInstance = new web3.eth.Contract(ethernolContractABI, smartContractAddress);
 	}
 	async function getFanImage() {
+		opened = true
 		web3 = new Web3(window.ethereum);		
 		fanImageContractInstance = new web3.eth.Contract(fanImageContractABI, address);
 		fanImageContractInstance.methods.getImage()
@@ -206,8 +208,7 @@
 			<button class="button-22" on:click={onMetaMaskButton}>
 				{metaMaskButtonString}
 			</button>
-			{/if}
-
+			{:else}
 			<div>
 				<div>
 					<div id="guide" bind:this={guide}></div>
@@ -227,39 +228,18 @@
 				</div>
 			</div>
 
-			{#if connected}	
+			{#if !opened}	
 				<input type="text" bind:value={address} placeholder={address}>
 				<button class="button-22" on:click={getFanImage}>
 					Open Fan Image.
 				</button>
 			{/if}
+			{/if}
 		</div>
 	</span>
 </section>
 
-<!-- 
-{#if target}
-<p>This is {address}</p>
-{:else}
-<p>No target defined.</p>
-{/if} -->
-
 <style>
-	input[type=text] {
-		border: 2px solid orangered;
-		border-radius: 4px;
-		color: var(--color-bg-0);
-		text-decoration: none;
-	}
-
-	section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
-
 	#canvas {
 		cursor: pointer;
 		margin-top: 20px;
