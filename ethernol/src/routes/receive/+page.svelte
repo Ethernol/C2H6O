@@ -1,6 +1,8 @@
 <script>
 	import { onMount } from "svelte";
 	import { smartContractABI } from "$lib/constants/abi.js";
+	import { page } from '$app/stores';
+	import { copy } from 'svelte-copy';
 
 	import Web3 from 'web3';
 	
@@ -10,9 +12,15 @@
 	let metaMaskButtonString = "";
 	let connected = false;
 
-	let account;
+	let account = "";
 	let smartContractInstance;
 	let web3;
+	let shortname  = ""
+	let base_link = window.location.href
+	base_link = base_link.replace("receive", "send"); 
+	base_link += "?target="
+	let link = ""
+	let link_created = false
 
 	onMount(async () => {
 		metaMaskButtonString = checkMetaMask();
@@ -33,14 +41,26 @@
 		connected = true;
 		setSmartContractInstance();
 	}
+	
+	function createLink(){
+		link_created = true
+		if (shortname === ""){
+			link = base_link + account
+		}
+		else{
+			link = base_link + shortname
+		}
+	}
 
 </script>
 <svelte:head>
-	<title>Home</title>
-	<meta name="description" content="Svelte demo app" />
+	<title>Recieve</title>
+	<meta name="description" content="Recieve" />
 </svelte:head>
 
 <section>
+	<h1> Recieve Ethernol </h1>
+	<h2> Create your link </h2>
 		<span class="welcome">
 			<div class="center">
 				{#if !connected}
@@ -49,13 +69,37 @@
 				</button>
 				{/if}
 				{#if connected}
-					<h3> You are connected</h3>
+					<h3> Your Wallet:</h3>
+					<input type="text" bind:value={account} placeholder={account} readonly>
+					<h3> Enter Shortname:</h3>
+					<input type="text" bind:value={shortname} placeholder={shortname}>
+					{#if !link_created}
+						<button class="button-22" on:click={createLink}>
+							Create Link
+						</button>
+					{/if}
+					{#if link_created}
+						<h3> Link:</h3>
+						<h2>{link}</h2>
+						<button class="button-22" use:copy={link}>
+							Copy!
+						</button>
+					{/if}
 				{/if}
 			</div>
 		</span>
 </section>
+<div id="clipboard"></div>
 
 <style>
+	input[type=text] {
+		border: 2px solid orangered;
+		border-radius: 4px;
+		width: 100%;
+		color: var(--color-bg-0);
+		text-decoration: none;
+	}
+
 	section {
 		display: flex;
 		flex-direction: column;
