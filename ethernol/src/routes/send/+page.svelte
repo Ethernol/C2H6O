@@ -4,7 +4,21 @@
 	import { smartContractABI } from "$lib/constants/abi.js";
 
 	import Web3 from 'web3';
+    import { check_outros } from 'svelte/internal';
 
+	let canvas;
+	let guide;
+	let colorInput;
+	let toggleGuide;
+	let remover;
+
+	const CELLS_X = 15;
+	const CELLS_Y = 20;
+	const cellPixelLength = Math.floor(500 / CELLS_X);
+	const canvasWidth = cellPixelLength * CELLS_X;
+	const canvasHeight = cellPixelLength * CELLS_Y;
+
+	const changedPixels = {};
 
 	let address = "Enter target wallet"
 	if ($page.url.searchParams.has('target')){
@@ -21,6 +35,64 @@
 	let web3;
 
 	onMount(async () => {
+		const drawingContext = canvas.getContext("2d");
+
+		// default color
+		colorInput.value = "#000000";
+
+		// background
+		const emptyColor = "#ffffff";
+		drawingContext.fillStyle = emptyColor;
+		drawingContext.fillRect(0, 0, canvasWidth, canvasHeight);
+
+		{
+			guide.style.width = `${canvasWidth}px`;
+			guide.style.height = `${canvasHeight}px`;
+			guide.style.gridTemplateColumns = `repeat(${CELLS_X}, 1fr)`;
+			guide.style.gridTemplateRows = `repeat(${CELLS_Y}, 1fr)`;
+
+			[...Array(CELLS_X * CELLS_Y)].forEach(() => guide.insertAdjacentHTML("beforeend", "<div></div>"));
+		}
+
+		function handleCanvasMousedown(e) {
+			if (e.button !== 0) {
+				return;
+			}
+
+			const canvasBoundingRect = canvas.getBoundingClientRect();
+			const x = e.clientX - canvasBoundingRect.left;
+			const y = e.clientY - canvasBoundingRect.top;
+			const cellX = Math.floor(x / cellPixelLength);
+			const cellY = Math.floor(y / cellPixelLength);
+
+			if(remover.checked) {
+				if(`${cellX}_${cellY}` in changedPixels) {
+					fillCell(cellX, cellY, emptyColor);
+					delete(changedPixels[`${cellX}_${cellY}`]);
+				}
+			}else{
+				fillCell(cellX, cellY, colorInput.value);
+				changedPixels[`${cellX}_${cellY}`] = colorInput.value;
+			}
+			
+			console.log(changedPixels);	
+		}
+
+		function handleToggleGuideChange() {
+			guide.style.display = toggleGuide.checked ? null : "none";
+		}
+
+		function fillCell(cellX, cellY, color) {
+			const startX = cellX * cellPixelLength;
+			const startY = cellY * cellPixelLength;
+
+			drawingContext.fillStyle = color;
+			drawingContext.fillRect(startX, startY, cellPixelLength, cellPixelLength);
+		}
+
+		canvas.addEventListener("mousedown", handleCanvasMousedown);
+		toggleGuide.addEventListener("change", handleToggleGuideChange);
+
 		metaMaskButtonString = checkMetaMask();
 
 		function checkMetaMask() {
@@ -76,6 +148,24 @@
 				{metaMaskButtonString}
 			</button>
 			{/if}
+
+			<div>
+				<div id="guide" bind:this={guide}></div>
+					<canvas width={canvasWidth} height={canvasHeight} bind:this={canvas} id="canvas"></canvas>
+				</div>
+				<div>
+					<label for="colorInput">Set Color: </label>
+					<input type="color" bind:this={colorInput} id="colorInput">
+				</div>
+				<div>
+					<label for="toggleGuide">Show Guide: </label>
+					<input type="checkbox" bind:this={toggleGuide} checked id="toggleGuide">
+				</div>
+				<div>
+					<label for="toggleRemover">Remove Pixel: </label>
+					<input type="checkbox" bind:this={remover} id="toggleRemover">
+				</div>
+			  
 			{#if connected}
 			<input type="text" bind:value={address} placeholder={address}>
 			<button class="button-22" on:click={donate10}>
@@ -107,5 +197,22 @@
 		justify-content: center;
 		align-items: center;
 		flex: 0.6;
+	}
+
+	#canvas {
+		cursor: pointer;
+		margin-top: 20px;
+		margin-bottom: 20px;
+	}
+
+	#guide {
+		display: grid;
+		pointer-events: none;
+		position: absolute;
+		border: 1px solid rgba(0, 0, 0, 0.2);
+	}
+
+	#guide :global(div) {
+		border: 1px solid rgba(0, 0, 0, 0.2);
 	}
 </style>
