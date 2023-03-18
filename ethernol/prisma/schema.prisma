@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.sqlite"
+}
+
+
+model Image {
+  name String @id
+  creator User @relation(fields: [creator_wallet], references: [wallet])
+  creator_wallet  String
+  blockchain_address String
+}
+
+model User {
+  wallet String @id
+  images Image[]
+  transactions_as_sender Transaction[] @relation(name: "transactions_as_sender")
+  transactions_as_receiver Transaction[] @relation(name: "transactions_as_receiver")
+}
+
+model Transaction {
+  id Int @id @default(autoincrement())
+  amount Float
+  sender User @relation(fields: [sender_wallet], references: [wallet], name: "transactions_as_sender")
+  sender_wallet String
+  reciever User @relation(fields : [sender_wallet], references: [wallet], name: "transactions_as_receiver")
+  reciever_wallet String
+}

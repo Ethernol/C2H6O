@@ -1,18 +1,16 @@
 <script>
 	import { onMount } from "svelte";
 	import { copy } from 'svelte-copy';
+	import { PrismaClient } from "@prisma/client";
+	import { fail } from "@sveltejs/kit";
 
-	import Web3 from 'web3';
-	
+	const prisma = new  PrismaClient()
 
-	let smartContractAddress = "0x472eCED37080fbCcb2332562f69B13e6d1c658cA";
 
 	let metaMaskButtonString = "";
 	let connected = false;
 
 	let account = "";
-	let smartContractInstance;
-	let web3;
 	let shortname  = ""
 	let base_link = window.location.href
 	base_link = base_link.replace("create", "contribute"); 
@@ -22,6 +20,8 @@
 	let width = 10
 	let heigth = 10
 	let ppp = 100000000
+
+
 
 
 	onMount(async () => {
@@ -53,6 +53,33 @@
 			link = base_link + shortname
 		}
 	}
+
+	async function getUser(){
+		const user = await prisma.user.findFirstOrThrow({
+			where: {
+				wallet : account
+			}
+		})
+		return user
+	}
+
+	async function createImage() {
+        try {
+            await prisma.image.create({
+                data: {
+                    name: shortname,
+                    creator: getUser(),
+                    blockchain_address : "?"
+                }
+            })
+        } catch (err){
+            console.log(err)
+            return fail(500, {message: "Database error"})
+        }
+        return {
+            status: 201
+        }
+    }
 
 </script>
 <svelte:head>
