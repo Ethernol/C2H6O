@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@types/mongodb": "^4.0.7",
+    "mongodb": "^5.1.0"
+  }
+}
