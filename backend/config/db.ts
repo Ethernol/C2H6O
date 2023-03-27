@@ -6,4 +6,3 @@ await mongoose.connect(env.MONGO_URL);
 mongoose.connection;
 
 export default env;
-
