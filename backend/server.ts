@@ -1,15 +1,12 @@
-
 import express from "npm:express";
-// import router from "./routes.ts";
+import env from "./config/db.ts";
+import user from "./routes/user.ts";
 
 const APP = express();
 
-APP.get("/", (req: any, res: { send: (arg0: string) => void; }) => {
-    res.send("Server started.");
-})
+APP.use(express.json());
+APP.use("/user", user);
 
-const PORT = 3000;
-
-APP.listen(PORT, () => {
-    console.log(`Server started on ${PORT}`);
-})
+APP.listen(env.PORT, () => {
+  console.log(`Server started on ${env.PORT}`);
+});

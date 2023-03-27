@@ -1,11 +1,9 @@
 import mongoose from "npm:mongoose";
 import { config } from "https://deno.land/x/dotenv@v3.2.2/mod.ts";
-
 const env = config();
+await mongoose.connect(env.MONGO_URL);
 
-const db = mongoose.connection;
+mongoose.connection;
 
-mongoose.connect(env.MONGO_URL);
+export default env;
 
-db.on("error", (error) => console.error(error));
-db.once("error", () => console.log("Connected to Database."));
