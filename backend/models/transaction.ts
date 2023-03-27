@@ -8,9 +8,9 @@ const transactionSchema = new Schema({
   user2: {
     type: String,
     required: true,
-  },  
+  },
   amount: {
-    type: Intl,
+    type: Number,
     required: true,
   },
 });

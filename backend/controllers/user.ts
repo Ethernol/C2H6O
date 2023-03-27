@@ -22,9 +22,7 @@ const getUsers = async (_req: Request, res: Response) => {
 
 const createUser = async (req: Request, res: Response) => {
   const user = new User({
-    name: req.body.name,
-    email: req.body.email,
-    password: req.body.password,
+    wallet: req.body.wallet,
   });
   try {
     const newUser = await user.save();
@@ -40,14 +38,8 @@ const updateUser = async (req: Request, res: Response) => {
     if (user == null) {
       return res.status(404).json({ message: "Cannot find user" });
     }
-    if (req.body.name != null) {
-      user.name = req.body.name;
-    }
-    if (req.body.email != null) {
-      user.email = req.body.email;
-    }
-    if (req.body.password != null) {
-      user.password = req.body.password;
+    if (req.body.wallet != null) {
+      user.wallet = req.body.wallet;
     }
     const updatedUser = await user.save();
     res.json(updatedUser);

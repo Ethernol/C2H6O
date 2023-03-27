@@ -1,7 +1,8 @@
+// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.3;
 
 contract Ethernol {
-    uint _price_per_fanimage = 5000000000000000;
+    uint _price_per_fanimage = 5_000_000_000_000_000;
     address _ethernol_address = 0xadC756EfB05506E373C1b650050daC0d5b57aE7C;
 
     mapping(address => address[]) _creator_image_mapping;
@@ -93,7 +94,6 @@ contract FanImage {
         require(msg.sender == _owner, "You are not the owner of this FanImage!");
         require(msg.sender != new_owner, "You are already the owner of this FanImage!");
         _owner = new_owner;
-
     }
 
     function getOwner() external view returns (address) {
