@@ -1,6 +1,6 @@
 import Router from "npm:express";
 import controller from "../controllers/generic.ts";
-import model from "../models/user.ts";
+import model from "../models/image.ts";
 
 
 const router = Router();

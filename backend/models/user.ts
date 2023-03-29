@@ -1,10 +1,17 @@
-import { model, Schema } from "npm:mongoose";
+import { Document, model, Schema } from "npm:mongoose";
 
-const userSchema = new Schema({
-  wallet: {
-    type: String,
-    required: true,
-  },
+export interface IUser {
+	address_id: string;
+}
+
+export interface IUserModel extends IUser, Document {}
+
+const UserSchema = new Schema({
+	address_id: {
+		type: Schema.Types.ObjectId,
+		required: true,
+		ref: "Address",
+	},
 });
 
-export default model("User", userSchema);
+export default model<IUserModel>("User", UserSchema);
