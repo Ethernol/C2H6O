@@ -1,18 +1,28 @@
-import { model, Schema } from "npm:mongoose";
+import { Document, model, Schema } from "npm:mongoose";
 
-const transactionSchema = new Schema({
-  user1: {
-    type: String,
-    required: true,
-  },
-  user2: {
-    type: String,
-    required: true,
-  },
-  amount: {
-    type: Number,
-    required: true,
-  },
+export interface ITransaction {
+	from_id: string;
+	to_id: string;
+	amount: number;
+}
+
+export interface ITransactionModel extends ITransaction, Document {}
+
+const TransactionSchema = new Schema({
+	from_id: {
+		type: Schema.Types.ObjectId,
+		required: true,
+		ref: "User",
+	},
+	to_id: {
+		type: Schema.Types.ObjectId,
+		required: true,
+		ref: "User",
+	},
+	amount: {
+		type: Number,
+		required: true,
+	},
 });
 
-export default model("User", transactionSchema);
+export default model<ITransactionModel>("Transaction", TransactionSchema);
