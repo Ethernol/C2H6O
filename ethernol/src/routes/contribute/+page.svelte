@@ -5,7 +5,7 @@
 	import { fanImageContractABI } from "$lib/constants/fan_image_abi.js";
 
 	import Web3 from 'web3';
-    import { check_outros } from 'svelte/internal';
+    // import { check_outros } from 'svelte/internal';
 
 	let canvas;
 	let guide;

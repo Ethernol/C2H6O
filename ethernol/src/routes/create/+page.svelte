@@ -13,15 +13,15 @@
 	let account = "";
 	let smartContractInstance;
 	let web3;
-	let shortname  = ""
-	let base_link = window.location.href
+	let shortname  = "";
+	let base_link = window.location.href;
 	base_link = base_link.replace("create", "contribute"); 
-	base_link += "?target="
-	let link = ""
-	let link_created = false
-	let width = 10
-	let heigth = 10
-	let ppp = 100000000
+	base_link += "?target=";
+	let link = "";
+	let link_created = false;
+	let width = 10;
+	let heigth = 10;
+	let ppp = 100000000;
 
 
 	onMount(async () => {
@@ -45,12 +45,12 @@
 	}
 	
 	function createLink(){
-		link_created = true
+		link_created = true;
 		if (shortname === ""){
-			link = base_link + account
+			link = base_link + account;
 		}
 		else{
-			link = base_link + shortname
+			link = base_link + shortname;
 		}
 	}
 
