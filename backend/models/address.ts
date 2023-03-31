@@ -10,6 +10,7 @@ const AddressSchema = new Schema({
 	address: {
 		type: String,
 		required: true,
+        unique: true
 	},
 });
 
