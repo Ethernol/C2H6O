@@ -6,6 +6,7 @@
 
     import Web3 from 'web3';
     import type Contract from 'web3-eth-contract';
+    import type { AbiItem } from 'web3-utils';
     // import { check_outros } from 'svelte/internal';
 
     let canvas: HTMLCanvasElement;
@@ -14,8 +15,8 @@
     let toggleGuide: HTMLInputElement;
     let remover: HTMLInputElement;
 
-    let canvasWidth;
-    let canvasHeight;
+    let canvasWidth: number;
+    let canvasHeight: number;
     let drawingContext: CanvasRenderingContext2D;
     let cellPixelLength: number;
 
@@ -68,7 +69,7 @@
         // https://sepolia.etherscan.io/tx/0x3837ce40b7a08b82c44cf4d184bb90813a7c23a40928e883f2d9d0f8c3e71e11
         web3 = new Web3(window.ethereum);
         smartContractInstance = new web3.eth.Contract(
-            ethernolContractABI,
+            ethernolContractABI as unknown as AbiItem [],
             smartContractAddress
         );
         return true;
@@ -77,7 +78,7 @@
     async function getFanImage() {
         web3 = new Web3(window.ethereum);
         fanImageContractInstance = new web3.eth.Contract(
-            fanImageContractABI,
+            fanImageContractABI as unknown as AbiItem [],
             address
         );
         fanImageContractInstance.methods

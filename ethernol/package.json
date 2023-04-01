@@ -30,6 +30,7 @@
   "type": "module",
   "dependencies": {
     "mongodb": "^5.1.0",
-    "web3": "^1.9.0"
+    "web3": "^1.9.0",
+    "web3-utils": "^1.9.0"
   }
 }
