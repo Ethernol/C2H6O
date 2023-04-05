@@ -15,5 +15,6 @@ APP.use("/image", image);
 APP.use("/transaction", transaction);
 
 APP.listen(env.PORT, () => {
-  console.log(`Server started on ${env.PORT}`);
+    console.log(`Server started on ${env.PORT}`);
 });
+

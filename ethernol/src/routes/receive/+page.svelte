@@ -1,64 +1,11 @@
-<script>
-    import { onMount } from 'svelte';
-    // import { smartContractABI } from "$lib/constants/abi.js";
-    // import { page } from '$app/stores';
-    import { copy } from 'svelte-copy';
-
-    // import Web3 from 'web3';
-
-    // let smartContractAddress = "0x472eCED37080fbCcb2332562f69B13e6d1c658cA";
-
-    let metaMaskButtonString = '';
-    let connected = false;
-
-    let account = '';
-    // let smartContractInstance;
-    // let web3;
-    let shortname = '';
-    let base_link = window.location.href;
-    base_link = base_link.replace('receive', 'send');
-    base_link += '?target=';
-    let link = '';
-    let link_created = false;
-
-    onMount(async () => {
-        metaMaskButtonString = checkMetaMask();
-
-        function checkMetaMask() {
-            if (typeof window.ethereum == 'undefined') {
-                console.log('MetaMask is not installed!');
-                return 'MetaMask is not installed.\nClick here to install!';
-            }
-            return 'Click here to login via MetaMask.';
-        }
-    });
-
-    async function onMetaMaskButton() {
-        const accounts = await window.ethereum.request({
-            method: 'eth_requestAccounts'
-        });
-        account = accounts[0];
-        connected = true;
-        // setSmartContractInstance();
-    }
-
-    function createLink() {
-        link_created = true;
-        if (shortname === '') {
-            link = base_link + account;
-        } else {
-            link = base_link + shortname;
-        }
-    }
-</script>
 
 <svelte:head>
-    <title>Recieve</title>
-    <meta name="description" content="Recieve" />
+    <title>Receive</title>
+    <meta name="description" content="Receive" />
 </svelte:head>
 
 <section>
-    <h1>Recieve Ethernol</h1>
+    <h1>Receive Ethernol</h1>
     <h2>Create your link</h2>
     <span class="welcome">
         <div class="center">
