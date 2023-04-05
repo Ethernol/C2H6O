@@ -1,34 +1,3 @@
-<script>
-    import { onMount } from 'svelte';
-
-    let metaMaskButtonString = '';
-    let connected = false;
-
-    let account = '';
-
-    onMount(async () => {
-        metaMaskButtonString = checkMetaMask();
-
-        function checkMetaMask() {
-            if (typeof window.ethereum == 'undefined') {
-                console.log('MetaMask is not installed!');
-                return 'MetaMask is not installed.\nClick here to install!';
-            }
-            return 'Click to login with MetaMask';
-        }
-    });
-
-    async function onMetaMaskButton() {
-        const accounts = await window.ethereum.request({
-            method: 'eth_requestAccounts'
-        });
-        account = accounts[0];
-        console.log(account);
-        connected = true;
-        // setSmartContractInstance();
-    }
-</script>
-
 <svelte:head>
     <title>Home</title>
     <meta name="description" content="Home" />
@@ -51,4 +20,3 @@
         </div>
     </span>
 </section>
-
