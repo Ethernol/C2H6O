@@ -1,4 +1,3 @@
-
 <svelte:head>
     <title>Send</title>
     <meta name="description" content="Send" />
@@ -118,4 +117,3 @@
         border: 1px solid rgba(0, 0, 0, 0.2);
     }
 </style>
-
