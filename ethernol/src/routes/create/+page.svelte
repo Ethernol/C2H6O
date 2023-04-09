@@ -1,46 +1,67 @@
-<svelte:head>
-    <title>Create</title>
-    <meta name="description" content="Create" />
-</svelte:head>
+<script lang="ts">
+    import ConnectionStatusLine from '$lib/components/ConnectionStatusLine.svelte';
+    import StandardInput from '$lib/components/StandardInput.svelte';
+    import StandardButton from '$lib/components/StandardButton.svelte';
 
-<section>
-    <h1>Create your Image</h1>
-    <span class="welcome">
-        <div class="center">
-            {#if !connected}
-                <div class="center">
-                    <button class="button-22" on:click={onMetaMaskButton}>
-                        {metaMaskButtonString}
-                    </button>
-                </div>
+    import { appStateController } from '$lib/script/app_state_controller';
+    const { userAccount } = appStateController;
+
+    import { creationStateController } from '$lib/script/creation_state_controller';
+    const { shortName, link, pricePerPixel, width, height } =
+        creationStateController;
+</script>
+
+<ConnectionStatusLine title="Create Your Image">
+    <div class="w-full max-w-md m-3">
+        <form
+            class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+            autocomplete="off"
+        >
+            <StandardInput
+                bind:value={$userAccount}
+                placeholder={$userAccount}
+                id="userAccount"
+                label="User Account:"
+                readonly
+            />
+
+            <StandardInput
+                placeholder={$shortName}
+                id="userAccount"
+                label="Enter Shortname:"
+            />
+
+            <StandardInput
+                type="number"
+                value={$width}
+                id="width"
+                label="Image width:"
+            />
+
+            <StandardInput
+                type="number"
+                value={$height}
+                id="height"
+                label="Image height:"
+            />
+
+            <StandardInput
+                type="number"
+                value={$pricePerPixel}
+                id="ppp"
+                label="Price per Pixel:"
+            />
+            {#if $link === ''}
+                <StandardButton toggleHandle="createLink" label="Create Link" />
             {:else}
-                <h3>Your Wallet:</h3>
-                <input
-                    type="text"
-                    bind:value={account}
-                    placeholder={account}
+                <StandardInput
+                    id={$link}
+                    placeholder={$link}
+                    label="Link:"
                     readonly
                 />
-                <h3>Enter Shortname:</h3>
-                <input type="text" bind:value={shortname} />
-                <h3>Image width:</h3>
-                <input type="text" bind:value={width} />
-                <h3>Image heigth:</h3>
-                <input type="text" bind:value={heigth} />
-                <h3>Price per pixel:</h3>
-                <input type="text" bind:value={ppp} />
-
-                {#if !link_created}
-                    <button class="button-22" on:click={createLink}>
-                        Create Link
-                    </button>
-                {:else}
-                    <h3>Link:</h3>
-                    <h2>{link}</h2>
-                    <button class="button-22" use:copy={link}> Copy! </button>
-                {/if}
+                <StandardButton label="Copy!" content={$link} />
             {/if}
-        </div>
-    </span>
-</section>
-<div id="clipboard" />
+        </form>
+    </div>
+</ConnectionStatusLine>

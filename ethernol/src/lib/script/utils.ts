@@ -1,6 +1,6 @@
 function componentToHex(c: number) {
     var hex = c.toString(16);
-    return hex.length == 1 ? '0' + hex : hex;
+    return hex.length === 1 ? '0' + hex : hex;
 }
 
 function int2hex(i: number) {
@@ -22,13 +22,4 @@ function hex2int(hex: string) {
         : null;
 }
 
-function createLink() {
-    link_created = true;
-    if (shortname === '') {
-        link = base_link + account;
-    } else {
-        link = base_link + shortname;
-    }
-}
-
-export { componentToHex, int2hex, hex2int, createLink };
+export { componentToHex, int2hex, hex2int };
