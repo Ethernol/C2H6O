@@ -12,21 +12,15 @@ class CanvasStateController {
         public initialImage: Writable<number[][]> = writable([]),
         public ready: Writable<boolean> = writable(false),
         public loaded: Writable<boolean> = writable(false),
+        public colorInput: Writable<string> = writable('#000000'),
+        public toggleGuide: Writable<boolean> = writable(false),
+        public remover: Writable<boolean> = writable(false),
 
         public canvas: Writable<HTMLCanvasElement> = writable(
             null as unknown as HTMLCanvasElement
         ),
         public guide: Writable<HTMLElement> = writable(
             null as unknown as HTMLElement
-        ),
-        public colorInput: Writable<HTMLInputElement> = writable(
-            null as unknown as HTMLInputElement
-        ),
-        public toggleGuide: Writable<HTMLInputElement> = writable(
-            null as unknown as HTMLInputElement
-        ),
-        public remover: Writable<HTMLInputElement> = writable(
-            null as unknown as HTMLInputElement
         ),
         public drawingContext: Writable<CanvasRenderingContext2D> = writable(
             null as unknown as CanvasRenderingContext2D
