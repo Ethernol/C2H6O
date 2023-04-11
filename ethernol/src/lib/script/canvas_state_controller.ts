@@ -8,6 +8,7 @@ class CanvasStateController {
         public imageAddress: Writable<string> = writable(''),
         public canvasWidth: Writable<number> = writable(0),
         public canvasHeight: Writable<number> = writable(0),
+        public pricePerPixel: Writable<number> = writable(0),
         public cellPixelLength: Writable<number> = writable(0),
         public initialImage: Writable<number[][]> = writable([]),
         public ready: Writable<boolean> = writable(false),

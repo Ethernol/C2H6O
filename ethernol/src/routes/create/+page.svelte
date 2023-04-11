@@ -8,9 +8,13 @@
     const { userAccount } = appStateController;
 
     import { creationStateController } from '$lib/script/creation_state_controller';
-    const { shortName, link, pricePerPixel, width, height } =
+    const { imageAddress, shortName, link, pricePerPixel, width, height } =
         creationStateController;
 </script>
+
+<svelte:head>
+    <meta name="description" content=CreateImage />
+</svelte:head>
 
 <ConnectionStatusLine title="Create Your Image">
     <StandardForm>
@@ -20,6 +24,13 @@
             id="userAccount"
             label="User Account:"
             readonly
+        />
+
+        <StandardInput
+            bind:value={$imageAddress}
+            placeholder={$imageAddress}
+            id="imageAccount"
+            label="Image address:"
         />
 
         <StandardInput
