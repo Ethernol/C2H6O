@@ -14,7 +14,7 @@
 
   <footer>
     <p>
-      visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit
+      Ethernol by Jörn, Louis, Pascal and Simon
     </p>
   </footer>
 </div>
