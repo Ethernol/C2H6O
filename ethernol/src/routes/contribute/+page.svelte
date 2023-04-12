@@ -1,13 +1,20 @@
 <script lang="ts">
+    import ConnectionStatusLine from '$lib/components/ConnectionStatusLine.svelte';
+
+    import { appStateController } from '$lib/script/app_state_controller';
+    const { userAccount } = appStateController;
+
     import { page } from '$app/stores';
+    import { hex2int, int2hex } from '$lib/script/utils';
     import { onMount } from 'svelte';
-    import { ethernolContractABI } from '$lib/constants/ethernol_abi.js';
     import { fanImageContractABI } from '$lib/constants/fan_image_abi.js';
+    import { canvasStateController } from '$lib/script/canvas_state_controller';
+    const { pricePerPixel, changedPixels } = canvasStateController;
 
     import Web3 from 'web3';
     import type Contract from 'web3-eth-contract';
     import type { AbiItem } from 'web3-utils';
-    // import { check_outros } from 'svelte/internal';
+    import { ethernolDBService } from '$lib/script/services/ethernol_db_service';
 
     let canvas: HTMLCanvasElement;
     let guide: HTMLElement;
@@ -21,19 +28,13 @@
     let cellPixelLength: number;
 
     let initialImage: number[][];
-    let pricePerPixel: number;
 
     const emptyColor = '#ffffff55';
-    const changedPixels: { [key: string]: any } = {};
 
-    // let address = "Enter target wallet"
-    // let address = "0x845cBA718f7645E8984AF893425050850411f7D0";
-    let address = '0x570BA4F0A9e272a7C8999eE061B789C1f001CaFf';
+    let imageAddress = '0x570BA4F0A9e272a7C8999eE061B789C1f001CaFf';
     if ($page.url.searchParams.has('target')) {
-        address = $page.url.searchParams.get('target') as string;
+        imageAddress = $page.url.searchParams.get('target') as string;
     }
-
-    let smartContractAddress = '0x472eCED37080fbCcb2332562f69B13e6d1c658cA';
 
     let metaMaskButtonString = '';
     let connected = false;
@@ -41,7 +42,6 @@
     let ready = false;
 
     let account = '';
-    let smartContractInstance: Contract;
     let fanImageContractInstance: Contract;
     let web3;
 
@@ -65,27 +65,17 @@
         connected = true;
     }
 
-    async function setSmartContractInstance() {
-        // https://sepolia.etherscan.io/tx/0x3837ce40b7a08b82c44cf4d184bb90813a7c23a40928e883f2d9d0f8c3e71e11
-        web3 = new Web3(window.ethereum);
-        smartContractInstance = new web3.eth.Contract(
-            ethernolContractABI as unknown as AbiItem [],
-            smartContractAddress
-        );
-        return true;
-    }
-
     async function getFanImage() {
         web3 = new Web3(window.ethereum);
         fanImageContractInstance = new web3.eth.Contract(
-            fanImageContractABI as unknown as AbiItem [],
-            address
+            fanImageContractABI as unknown as AbiItem[],
+            imageAddress
         );
         fanImageContractInstance.methods
             .getPricePerPixel()
             .call({ from: account })
             .then((ppp: number) => {
-                pricePerPixel = ppp;
+                $pricePerPixel = ppp;
             });
         fanImageContractInstance.methods
             .getImage()
@@ -98,26 +88,25 @@
         loaded = true;
     }
     async function paintPixels() {
-        // TODO: Move in own function getColors
-        let amount = Object.keys(changedPixels).length;
-        let xs = Object.keys(changedPixels).map((key) => key.split(',')[0]);
-        let ys = Object.keys(changedPixels).map((key) => key.split(',')[1]);
-        let colors = Object.keys(changedPixels).map(
-            (key: string) => changedPixels[key]
+        let amount = Object.keys($changedPixels).length;
+        let xs = Object.keys($changedPixels).map((key) => key.split(',')[0]);
+        let ys = Object.keys($changedPixels).map((key) => key.split(',')[1]);
+        let colors = Object.keys($changedPixels).map(
+            (key: string) => $changedPixels[key]
         );
-        fanImageContractInstance.methods
+        await fanImageContractInstance.methods
             .paintPixels(amount, xs, ys, colors)
-            .send({ from: account, value: amount * pricePerPixel });
-    }
+            .send({ from: account, value: amount * $pricePerPixel })
+            .catch((err: Error) => {
+                console.error(err.message);
+                return err;
+            });
 
-    function donate(donation: number) {
-        if (smartContractInstance !== null) {
-            smartContractInstance.methods
-                .sendDonation('0xadC756EfB05506E373C1b650050daC0d5b57aE7C')
-                .send({ from: account, value: donation });
-        }
-        // web3.utils.toWei(donation, 'ether')
-        console.log('Donated');
+        ethernolDBService.createNewTransaction(
+            $userAccount,
+            account,
+            amount * $pricePerPixel
+        );
     }
 
     function handleCanvasMousedown(e: MouseEvent) {
@@ -132,20 +121,22 @@
         const cellY: number = Math.floor(y / cellPixelLength);
 
         if (remover.checked) {
-            if (String([cellX, cellY]) in changedPixels) {
+            if (String([cellX, cellY]) in $changedPixels) {
                 clearCell(cellX, cellY);
-                delete changedPixels[String([cellX, cellY])];
+                delete $changedPixels[String([cellX, cellY])];
             }
         } else {
             console.log(initialImage[cellY][cellX]);
             if (initialImage[cellY][cellX] == 999999999) {
                 fillCell(cellX, cellY, colorInput.value);
-                changedPixels[String([cellX, cellY])] = hex2int(colorInput.value);
+                $changedPixels[String([cellX, cellY])] = hex2int(
+                    colorInput.value
+                );
             }
         }
         console.log(int2hex(initialImage[cellY][cellX]));
-        console.log(Object.keys(changedPixels).length);
-        ready = Object.keys(changedPixels).length > 0;
+        console.log(Object.keys($changedPixels).length);
+        ready = Object.keys($changedPixels).length > 0;
     }
 
     function handleToggleGuideChange() {
@@ -230,29 +221,6 @@
         canvas.addEventListener('mousedown', handleCanvasMousedown);
         toggleGuide.addEventListener('change', handleToggleGuideChange);
     }
-    function componentToHex(c: number) {
-        var hex = c.toString(16);
-        return hex.length == 1 ? '0' + hex : hex;
-    }
-
-    function int2hex(i: number) {
-        let m = i % 1000000;
-        return (
-            '#' +
-            componentToHex(Math.floor(i / 1000000)) +
-            componentToHex(Math.floor(m / 1000)) +
-            componentToHex(Math.floor(m % 1000))
-        );
-    }
-
-    function hex2int(hex: string) {
-        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        return result
-            ? parseInt(result[1], 16) * 1000000 +
-                  parseInt(result[2], 16) * 1000 +
-                  parseInt(result[3], 16)
-            : null;
-    }
 </script>
 
 <svelte:head>
@@ -261,17 +229,9 @@
 </svelte:head>
 
 <section>
-    <h1>Send</h1>
+    <ConnectionStatusLine title="Send" />
     <span class="welcome">
         <div class="center">
-            {#if !connected}
-                <div class="center">
-                    <button class="button-22" on:click={onMetaMaskButton}>
-                        {metaMaskButtonString}
-                    </button>
-                </div>
-            {/if}
-
             <div>
                 <div>
                     <div id="guide" bind:this={guide} />
@@ -283,7 +243,7 @@
                     />
                 </div>
                 <div>
-                    <label for="colorInput">Set Color: </label>
+                    <label for="colorInput">Set Color:</label>
                     <input
                         type="color"
                         bind:this={colorInput}
@@ -291,7 +251,7 @@
                     />
                 </div>
                 <div>
-                    <label for="toggleGuide">Show Guide: </label>
+                    <label for="toggleGuide">Show Guide:</label>
                     <input
                         type="checkbox"
                         bind:this={toggleGuide}
@@ -300,7 +260,7 @@
                     />
                 </div>
                 <div>
-                    <label for="toggleRemover">Remove Pixel: </label>
+                    <label for="toggleRemover">Remove Pixel:</label>
                     <input
                         type="checkbox"
                         bind:this={remover}
@@ -309,12 +269,12 @@
                 </div>
             </div>
 
-            {#if connected && !loaded}
+            {#if !loaded}
                 <div class="center">
                     <input
                         type="text"
-                        bind:value={address}
-                        placeholder={address}
+                        bind:value={imageAddress}
+                        placeholder={imageAddress}
                     />
                     <button class="button-22" on:click={getFanImage}>
                         Open Fan Image.
@@ -325,8 +285,8 @@
             {#if loaded && ready}
                 <div class="center">
                     <button class="button-22" on:click={paintPixels}>
-                        Paint pixels (for {Object.keys(changedPixels).length *
-                            pricePerPixel} WEI.).
+                        Paint pixels (for {Object.keys($changedPixels).length *
+                            $pricePerPixel} WEI.).
                     </button>
                 </div>
             {/if}
@@ -334,12 +294,6 @@
     </span>
 </section>
 
-<!-- 
-{#if target}
-<p>This is {address}</p>
-{:else}
-<p>No target defined.</p>
-{/if} -->
 <style>
     input[type='text'] {
         border: 2px solid orangered;
@@ -374,4 +328,3 @@
         border: 1px solid rgba(0, 0, 0, 0.2);
     }
 </style>
-

@@ -10,6 +10,8 @@ const UserSchema = new Schema({
 	address_id: {
 		type: Schema.Types.ObjectId,
 		required: true,
+        index: true,
+        unique: true,
 		ref: "Address",
 	},
 });

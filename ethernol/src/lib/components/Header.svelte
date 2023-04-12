@@ -6,7 +6,7 @@
 
 <header>
     <div class="corner">
-        <a href = "">
+        <a href = " ">
             <img src={logo} alt="SvelteKit" />
         </a>
     </div>
