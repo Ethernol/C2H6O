@@ -1,6 +1,5 @@
 import { writable } from 'svelte/store';
 import type { Writable } from 'svelte/store';
-import type Contract from 'web3-eth-contract';
 import Web3 from 'web3';
 class CanvasStateController {
     constructor(
@@ -26,10 +25,6 @@ class CanvasStateController {
         public drawingContext: Writable<CanvasRenderingContext2D> = writable(
             null as unknown as CanvasRenderingContext2D
         ),
-        public fanImageContractInstance: Writable<Contract> = writable(
-            null as unknown as Contract
-        ),
-
         public changedPixels: Writable<{ [key: string]: any }> = writable({})
     ) {}
 }

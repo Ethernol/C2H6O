@@ -4,10 +4,18 @@
     import { ethernolDBService } from '$lib/script/services/ethernol_db_service';
 
     import { creationStateController } from '$lib/script/creation_state_controller';
-    const { imageAddress, shortName, link } = creationStateController;
+    const { imageAddress, shortName, link, pricePerPixel } = creationStateController;
 
     import { appStateController } from '$lib/script/app_state_controller';
-    const { userAccount } = appStateController;
+    const { userAccount, ethernolContractInstance } = appStateController;
+
+    import { ethernolContractABI } from '$lib/constants/ethernol_abi.js';
+
+    import Web3 from 'web3';
+    import type { AbiItem } from 'web3-utils';
+
+
+    let web3: Web3;
 
     // import { canvasStateController } from '$lib/script/canvas_state_controller';
     // const { fanImageContractInstance, changedPixels } = canvasStateController;
@@ -16,6 +24,19 @@
     export let content = '';
     export let toggleHandle = '';
 
+    function getEthernol() {
+        web3 = new Web3(window.ethereum);
+        $ethernolContractInstance = new web3.eth.Contract(
+            ethernolContractABI as unknown as AbiItem[]
+        );
+        $ethernolContractInstance.methods
+            .getPricePerPixel()
+            .call({ from: $userAccount })
+            .then((ppp: number) => {
+                $pricePerPixel = ppp;
+            });
+    }
+
     async function createLink() {
         let base_link = window.location.href;
         base_link = base_link.replace('receive', 'send') + '?target=';
@@ -23,6 +44,7 @@
             $shortName === ''
                 ? base_link + $userAccount
                 : base_link + $shortName;
+        getEthernol();
         if ($imageAddress === '')
             ethernolDBService.createNewImage(
                 $userAccount,

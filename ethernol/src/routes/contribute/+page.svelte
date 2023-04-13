@@ -2,18 +2,17 @@
     import ConnectionStatusLine from '$lib/components/ConnectionStatusLine.svelte';
 
     import { appStateController } from '$lib/script/app_state_controller';
-    const { userAccount } = appStateController;
+    const { fanImageContractInstance, userAccount } = appStateController;
 
     import { page } from '$app/stores';
     import { hex2int, int2hex } from '$lib/script/utils';
-    import { onMount } from 'svelte';
     import { fanImageContractABI } from '$lib/constants/fan_image_abi.js';
     import { canvasStateController } from '$lib/script/canvas_state_controller';
-    const { pricePerPixel, changedPixels } = canvasStateController;
-
+    const { pricePerPixel, changedPixels,  } = canvasStateController;
+    
     import Web3 from 'web3';
-    import type Contract from 'web3-eth-contract';
     import type { AbiItem } from 'web3-utils';
+
     import { ethernolDBService } from '$lib/script/services/ethernol_db_service';
 
     let canvas: HTMLCanvasElement;
@@ -36,50 +35,26 @@
         imageAddress = $page.url.searchParams.get('target') as string;
     }
 
-    let metaMaskButtonString = '';
-    let connected = false;
     let loaded = false;
     let ready = false;
 
-    let account = '';
-    let fanImageContractInstance: Contract;
-    let web3;
-
-    onMount(async () => {
-        metaMaskButtonString = checkMetaMask();
-
-        function checkMetaMask() {
-            if (typeof window.ethereum == 'undefined') {
-                console.log('MetaMask is not installed!');
-                return 'MetaMask is not installed.\nClick here to install!';
-            }
-            return 'Click to login with MetaMask';
-        }
-    });
-
-    async function onMetaMaskButton() {
-        const accounts = await window.ethereum.request({
-            method: 'eth_requestAccounts'
-        });
-        account = accounts[0];
-        connected = true;
-    }
+    let web3: Web3;
 
     async function getFanImage() {
         web3 = new Web3(window.ethereum);
-        fanImageContractInstance = new web3.eth.Contract(
+        $fanImageContractInstance = new web3.eth.Contract(
             fanImageContractABI as unknown as AbiItem[],
             imageAddress
         );
-        fanImageContractInstance.methods
+        $fanImageContractInstance.methods
             .getPricePerPixel()
-            .call({ from: account })
+            .call({ from: $userAccount })
             .then((ppp: number) => {
                 $pricePerPixel = ppp;
             });
-        fanImageContractInstance.methods
+        $fanImageContractInstance.methods
             .getImage()
-            .call({ from: account })
+            .call({ from: $userAccount })
             .then((img: number[][]) => {
                 initialImage = img;
                 initImage();
@@ -94,9 +69,9 @@
         let colors = Object.keys($changedPixels).map(
             (key: string) => $changedPixels[key]
         );
-        await fanImageContractInstance.methods
+        await $fanImageContractInstance.methods
             .paintPixels(amount, xs, ys, colors)
-            .send({ from: account, value: amount * $pricePerPixel })
+            .send({ from: $userAccount, value: amount * $pricePerPixel })
             .catch((err: Error) => {
                 console.error(err.message);
                 return err;
@@ -104,7 +79,7 @@
 
         ethernolDBService.createNewTransaction(
             $userAccount,
-            account,
+            $userAccount,
             amount * $pricePerPixel
         );
     }
@@ -232,6 +207,17 @@
     <ConnectionStatusLine title="Send" />
     <span class="welcome">
         <div class="center">
+<<<<<<< HEAD
+=======
+            <!-- {#if !connected} -->
+            <!--     <div class="center"> -->
+            <!--         <button class="button-22" on:click={onMetaMaskButton}> -->
+            <!--             {metaMaskButtonString} -->
+            <!--         </button> -->
+            <!--     </div> -->
+            <!-- {/if} -->
+            <!-- {#if $useruserAccount !== ""} -->
+>>>>>>> 49b4c42 (Add ethernol contract abi to component StandardButton.svelte)
             <div>
                 <div>
                     <div id="guide" bind:this={guide} />
@@ -268,8 +254,13 @@
                     />
                 </div>
             </div>
+            <!-- {/if} -->
 
+<<<<<<< HEAD
             {#if !loaded}
+=======
+            {#if $userAccount !== '' && !loaded}
+>>>>>>> 49b4c42 (Add ethernol contract abi to component StandardButton.svelte)
                 <div class="center">
                     <input
                         type="text"

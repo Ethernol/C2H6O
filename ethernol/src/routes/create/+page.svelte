@@ -4,16 +4,19 @@
     import StandardButton from '$lib/components/StandardButton.svelte';
     import StandardForm from '$lib/components/StandardForm.svelte';
 
+
     import { appStateController } from '$lib/script/app_state_controller';
     const { userAccount } = appStateController;
 
     import { creationStateController } from '$lib/script/creation_state_controller';
     const { imageAddress, shortName, link, pricePerPixel, width, height } =
         creationStateController;
+
+
 </script>
 
 <svelte:head>
-    <meta name="description" content=CreateImage />
+    <meta name="description" content="CreateImage" />
 </svelte:head>
 
 <ConnectionStatusLine title="Create Your Image">

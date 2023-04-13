@@ -4,7 +4,12 @@
     import { ethernolDBService } from '$lib/script/services/ethernol_db_service';
     const { userAccount } = appStateController;
 
+
     async function onMountConfig() {
+        const r = await ethernolDBService.createNewUser(
+            "ABCD"
+        );
+
         if (window.ethereum) {
             const accounts = await window.ethereum.request({
                 method: 'eth_requestAccounts'
@@ -13,13 +18,16 @@
                 // Set user address in store
                 if ($userAccount !== accounts[0]) {
                     $userAccount = accounts[0];
-                    ethernolDBService.createNewUser($userAccount);
+                    const user = await ethernolDBService.createNewUser(
+                        $userAccount
+                    );
+                    console.log(user);
                 }
             } else {
-                console.log('No accounts found.');
+                console.error('No accounts found.');
             }
         } else {
-            console.log('Metamask not detected.');
+            console.error('Metamask not detected.');
         }
     }
 
