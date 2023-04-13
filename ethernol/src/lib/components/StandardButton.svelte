@@ -4,12 +4,14 @@
     import { ethernolDBService } from '$lib/script/services/ethernol_db_service';
 
     import { creationStateController } from '$lib/script/creation_state_controller';
-    const { imageAddress, shortName, link, pricePerPixel } = creationStateController;
+    const { imageAddress, shortName, link, pricePerPixel, width, height } = creationStateController;
 
     import { appStateController } from '$lib/script/app_state_controller';
     const { userAccount, ethernolContractInstance } = appStateController;
 
     import { ethernolContractABI } from '$lib/constants/ethernol_abi.js';
+
+    const contractAddress = '0x5616beaff977490F4Bf854c133C3a44132b8f8ce';
 
     import Web3 from 'web3';
     import type { AbiItem } from 'web3-utils';
@@ -30,21 +32,21 @@
             ethernolContractABI as unknown as AbiItem[]
         );
         $ethernolContractInstance.methods
-            .getPricePerPixel()
+            .createFanImage($width, $height, $pricePerPixel)
             .call({ from: $userAccount })
-            .then((ppp: number) => {
-                $pricePerPixel = ppp;
+            .then((_imageAddress: string) => {
+                $imageAddress = _imageAddress;
             });
     }
 
     async function createLink() {
         let base_link = window.location.href;
         base_link = base_link.replace('receive', 'send') + '?target=';
+        getEthernol();
         $link =
             $shortName === ''
-                ? base_link + $userAccount
+                ? base_link + $imageAddress
                 : base_link + $shortName;
-        getEthernol();
         if ($imageAddress === '')
             ethernolDBService.createNewImage(
                 $userAccount,

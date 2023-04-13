@@ -12,7 +12,7 @@
     const { imageAddress, shortName, link, pricePerPixel, width, height } =
         creationStateController;
 
-
+        
 </script>
 
 <svelte:head>
@@ -29,12 +29,12 @@
             readonly
         />
 
-        <StandardInput
+        <!-- <StandardInput
             bind:value={$imageAddress}
             placeholder={$imageAddress}
             id="imageAccount"
             label="Image address:"
-        />
+        /> -->
 
         <StandardInput
             placeholder={$shortName}

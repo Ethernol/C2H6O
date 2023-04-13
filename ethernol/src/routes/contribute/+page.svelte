@@ -207,17 +207,6 @@
     <ConnectionStatusLine title="Send" />
     <span class="welcome">
         <div class="center">
-<<<<<<< HEAD
-=======
-            <!-- {#if !connected} -->
-            <!--     <div class="center"> -->
-            <!--         <button class="button-22" on:click={onMetaMaskButton}> -->
-            <!--             {metaMaskButtonString} -->
-            <!--         </button> -->
-            <!--     </div> -->
-            <!-- {/if} -->
-            <!-- {#if $useruserAccount !== ""} -->
->>>>>>> 49b4c42 (Add ethernol contract abi to component StandardButton.svelte)
             <div>
                 <div>
                     <div id="guide" bind:this={guide} />
@@ -254,13 +243,7 @@
                     />
                 </div>
             </div>
-            <!-- {/if} -->
-
-<<<<<<< HEAD
-            {#if !loaded}
-=======
             {#if $userAccount !== '' && !loaded}
->>>>>>> 49b4c42 (Add ethernol contract abi to component StandardButton.svelte)
                 <div class="center">
                     <input
                         type="text"
