@@ -9,16 +9,16 @@ import transaction from './routes/transaction.ts';
 
 const APP = express();
 
-APP.use((_req: Request, res: Response) => {
-    res.set('Access-Control-Allow-Origin', '*');
-    res.set(
-        'Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS, POST, PUT, DELETE'
-    );
-    res.set(
-        'Access-Control-Allow-Headers',
-        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-    );
-});
+// APP.use((_req: Request, res: Response) => {
+//     res.set('Access-Control-Allow-Origin', '*');
+//     res.set(
+//         'Access-Control-Allow-Methods', 'GET, HEAD, POST, OPTIONS, POST, PUT, DELETE'
+//     );
+//     res.set(
+//         'Access-Control-Allow-Headers',
+//         'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+//     );
+// });
 
 APP.use(express.json());
 APP.use('/user', user);
