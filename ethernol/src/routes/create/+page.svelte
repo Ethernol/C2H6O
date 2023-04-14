@@ -9,7 +9,7 @@
     const { userAccount } = appStateController;
 
     import { creationStateController } from '$lib/script/creation_state_controller';
-    const { imageAddress, shortName, link, pricePerPixel, width, height } =
+    const { shortName, link, pricePerPixel, width, height } =
         creationStateController;
 
         

@@ -4,12 +4,7 @@
     import { ethernolDBService } from '$lib/script/services/ethernol_db_service';
     const { userAccount } = appStateController;
 
-
     async function onMountConfig() {
-        const r = await ethernolDBService.createNewUser(
-            "ABCD"
-        );
-
         if (window.ethereum) {
             const accounts = await window.ethereum.request({
                 method: 'eth_requestAccounts'
@@ -18,10 +13,14 @@
                 // Set user address in store
                 if ($userAccount !== accounts[0]) {
                     $userAccount = accounts[0];
-                    const user = await ethernolDBService.createNewUser(
-                        $userAccount
-                    );
-                    console.log(user);
+                    await ethernolDBService
+                        .createNewUser($userAccount)
+                        .then((user) => {
+                            console.log('Created user: ', user);
+                        })
+                        .catch((error) => {
+                            console.error('Error creating user: ', error);
+                        });
                 }
             } else {
                 console.error('No accounts found.');
