@@ -1,4 +1,3 @@
-// SPDX-License-Identifier: MIT
 pragma solidity >=0.8.3;
 
 contract Ethernol {
@@ -11,7 +10,9 @@ contract Ethernol {
     receive() external payable {}
     fallback() external payable {}
 
-    function createFanImage(uint16 width, uint16 height, uint64 price_per_pixel) external payable returns (address){
+    event GiveImageAddress(address image_address);
+
+    function createFanImage(uint16 width, uint16 height, uint64 price_per_pixel) external payable {
         require(msg.value == _price_per_fanimage, "You must pay correct value!");
         
         address image_address = address(new FanImage(width, height, price_per_pixel));
@@ -20,7 +21,7 @@ contract Ethernol {
         require(success, "Payment failed!");
         
         _creator_image_mapping[msg.sender].push(image_address); 
-        return image_address;
+        emit GiveImageAddress(image_address);
     }
 
     function getImages(address owner) external view returns (address[] memory) {
