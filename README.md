@@ -2,9 +2,10 @@
 
 ## Start mongodb
 
-First install and then start mongodb
+First install and then start MongoDB. Then create the database with the following collections.
 
 ```
+use EthernolDB
 db.createCollection("users");
 db.createCollection("translations");
 db.createCollection("images");

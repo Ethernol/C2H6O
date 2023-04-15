@@ -33,6 +33,7 @@
     let imageAddress = '0x570BA4F0A9e272a7C8999eE061B789C1f001CaFf';
     if ($page.url.searchParams.has('target')) {
         imageAddress = $page.url.searchParams.get('target') as string;
+        console.log(imageAddress);
     }
 
     let loaded = false;
@@ -79,7 +80,7 @@
 
         ethernolDBService.createNewTransaction(
             $userAccount,
-            $userAccount,
+            imageAddress,
             amount * $pricePerPixel
         );
     }

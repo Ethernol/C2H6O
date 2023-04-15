@@ -4,18 +4,19 @@
     import { ethernolDBService } from '$lib/script/services/ethernol_db_service';
 
     import { creationStateController } from '$lib/script/creation_state_controller';
-    const { imageAddress, shortName, link, pricePerPixel, width, height } = creationStateController;
+    const { imageAddress, link, pricePerPixel, width, height } =
+        creationStateController;
 
     import { appStateController } from '$lib/script/app_state_controller';
     const { userAccount, ethernolContractInstance } = appStateController;
 
     import { ethernolContractABI } from '$lib/constants/ethernol_abi.js';
 
-    const contractAddress = '0x5616beaff977490F4Bf854c133C3a44132b8f8ce';
+    const contractAddress = '0xF639ba57fBC29a7C2D629eEbF8a001f4FB2eC5EB';
 
     import Web3 from 'web3';
-    import type { AbiItem } from 'web3-utils';
 
+    import type { AbiItem } from 'web3-utils';
 
     let web3: Web3;
 
@@ -26,39 +27,33 @@
     export let content = '';
     export let toggleHandle = '';
 
-    function getEthernol() {
+    async function getEthernol() {
         web3 = new Web3(window.ethereum);
         $ethernolContractInstance = new web3.eth.Contract(
-            ethernolContractABI as unknown as AbiItem[]
+            ethernolContractABI as unknown as AbiItem[],
+            contractAddress
         );
-        $ethernolContractInstance.methods
+
+        const result = await $ethernolContractInstance.methods
             .createFanImage($width, $height, $pricePerPixel)
-            .call({ from: $userAccount })
-            .then((_imageAddress: string) => {
-                $imageAddress = _imageAddress;
-            });
+            .send({ from: $userAccount, value: 5000000000000000 });
+
+        $imageAddress = result.events.GiveImageAddress.returnValues.image_address;
     }
 
     async function createLink() {
         let base_link = window.location.href;
-        base_link = base_link.replace('receive', 'send') + '?target=';
-        getEthernol();
-        $link =
-            $shortName === ''
-                ? base_link + $imageAddress
-                : base_link + $shortName;
-        if ($imageAddress === '')
-            ethernolDBService.createNewImage(
-                $userAccount,
-                $shortName,
-                $userAccount
-            );
-        else
-            ethernolDBService.createNewImage(
-                $imageAddress,
-                $shortName,
-                $userAccount
-            );
+        base_link = base_link.replace('create', 'contribute') + '?target=';
+        await getEthernol();
+        $link = base_link + $imageAddress;
+        // $shortName === ''
+        //     ? base_link + $imageAddress
+        //     : base_link + $shortName;
+        ethernolDBService.createNewImage(
+            $imageAddress,
+            $imageAddress,
+            $userAccount
+        );
     }
 
     // async function paintPixels() {
