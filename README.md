@@ -1,5 +1,15 @@
 # C2H6O
 
+## Why Ethernol and C2H6O?
+
+Ethernol (Ethanol + Ether) with C2H6O as the chemical formula for Ethanol is a fun project.
+Ethernol is the base line for an on chain application that enables you to create a donation system using pixel art (inspired by Reddit's yearly competition, specifically r/place).
+It uses Blockchain technology for sending and receiving transactions, using our own Smart Contract / Token.
+For storing only the viewest user information, it uses MongoDB (no name or password needed).
+
+Logging is done by logging in via a Metamask or Brave Wallet account etc.
+Finally we created this open source project with a frontend made with Node and Svelte (as currently the Deno support seems to be lacking for Svelte), while the application backend is purely written with Deno, and npm:mongoose as a router, as it still seems to be a viable option with the interoperability of Deno with NPM packages.
+
 ## Start mongodb
 
 First install and then start MongoDB. Then create the database with the following collections.
