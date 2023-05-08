@@ -58,3 +58,12 @@ Note that this also poses another difficulty as registering in Metamask does not
 In general final testing could not be accomplished as the server has to be pushed to production.
 And the database as well.
 
+## Concepts
+
+The main idea is to have an image on the blockchain. Each pixel can be changed only once by a small donation after the initial creation. One image instance is unique and exists only once on the blockchain. It's implemented by a smart contract, has an own address and has only one owner defined on the blockchain. It's therefore comparable to an NFT, but it can be designed by users initially.
+
+While all those components are defined in Solidity and running on the Ethereum blockchain (or test chains), the interaction is implemented in a website. This website allows the contribution to and creation of new images. The embedding of the blockchain functionality in the website is done by using web3.js and typescript. To build a more powerful website in time, Svelte and Deno are used. Svelte allows to build a frontend with high interactivity more easily. Deno is used to handle the backend and implementation of an additional database.
+
+Because storing data persistently on the blockchain is expensive in order of fees it’s not suitable to store information about the transactions on the blockchain too. Therefore, an additional MongoDB database is implemented to allow tracking the own sent and received donations and creating useful statistics for the user and contributors. This lays a powerful foundation and grants a toolset for later implementations and further features.
+
+
