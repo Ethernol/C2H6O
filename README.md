@@ -40,8 +40,9 @@ npm run dev -- --open
 The following screen shots show how to create a new link to a creator image.
 Fans can paint on it and share their love for the creator by donating money to the creator!
 
+![Screenshot showing the Creation page under Create](./screenshots/]
 
-
+![Screenshot showing the pop up for spending money, after creation step](./screenshots/]
 
 ## Problems when testing
 
