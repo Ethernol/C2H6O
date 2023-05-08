@@ -35,6 +35,14 @@ For testing, run
 npm run dev -- --open
 ```
 
+## Using the application
+
+The following screen shots show how to create a new link to a creator image.
+Fans can paint on it and share their love for the creator by donating money to the creator!
+
+
+
+
 ## Problems when testing
 
 Browsers can pose quite a lot of problems when testing the workability of the server combined with accessing a database on the same machine.
